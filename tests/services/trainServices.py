@@ -7,16 +7,7 @@ class TestTrainService(unittest.TestCase):
         self.graph = 'mock'
         self.epoch = 1001
         self.batch_size = 36
-        self.feed_dict_succ = {
-            'x': 'mock',
-            'y': 'mock',
-            'training': 'mock'
-        }
-        self.feed_dict_fail = {
-            'x': 'mock',
-            'y': 'mock'
-        }
-        self.data_sucss = {
+        self.data = {
             'train': {
                 'x': 'mock',
                 'y': 'mock'
@@ -31,30 +22,18 @@ class TestTrainService(unittest.TestCase):
             }
 
         }
-        self.data_fail = {
-            'train': {
-                'x': 'mock',
-                'y': 'mock'
-            },
-            'val': {
-                'x': 'mock',
-                'y': 'mock'
-            }
-        }
 
         self.optimizer = 'mock'
-
         self.loss_calculator = MockLossCalculator()
 
         self.logdir = 'mock'
         self.save_path = './mock'
 
     def test_train(self):
-        trained_succ = train(graph=self.graph,
+        trained_succ = train(graph_model=self.graph,
                              epochs=self.epoch,
                              batch_size=self.batch_size,
-                             feed_dict=self.feed_dict_succ,
-                             data=self.data_sucss,
+                             data=self.data,
                              optimizer=self.optimizer,
                              loss_calculator=self.loss_calculator,
                              logdir=self.logdir,

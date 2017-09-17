@@ -2,18 +2,17 @@ import tensorflow as tf
 from nolearn.lasagne import BatchIterator
 
 
-def train(graph, epochs, batch_size, feed_dict, data, optimizer, loss_calculator, logdir, save_path, val_epoch=100, save_epoch=500, unittest=False):
+def train(graph_model, epochs, batch_size, data, optimizer, loss_calculator, logdir, save_path, val_epoch=100, save_epoch=500, unittest=False):
+    print 'Start training ...'
 
-    assert 'x' and 'y' and 'training' in feed_dict, 'feed_dict misses some key'
     assert 'train' and 'val' and 'test' in data, 'train or val or test datasets is missing in data'
     assert 'x' and 'y' in data['train'], 'x or y in data["train"] is missing'
     assert 'x' and 'y' in data['val'], 'x or y in data["val"] is missing'
     assert 'x' and 'y' in data['test'], 'x or y in data["test"] is missing'
     assert 'calculate' in dir(loss_calculator)
 
-    x_feed_dict_key = feed_dict['x']
-    y_feed_dict_key = feed_dict['y']
-    is_training_key = feed_dict['training']
+    print 'Asserting check passed!'
+
     x_train = data['train']['x']
     y_train = data['train']['y']
     x_val = data['val']['x']
@@ -23,20 +22,23 @@ def train(graph, epochs, batch_size, feed_dict, data, optimizer, loss_calculator
 
     if unittest: return True
 
-    with tf.Session(graph=graph) as sess:
+    print 'Running a session ...'
+    with tf.Session(graph=graph_model.graph) as sess:
         sess.run(tf.global_variables_initializer())
         saver = tf.train.Saver()
         summary_op = tf.summary.merge_all()
         writer = tf.summary.FileWriter(logdir=logdir, graph=sess.graph)
+        x_placeholder, y_placeholder, is_training_placeholder = graph_model.get_placeholders()
 
         for epoch in range(epochs):
+            print '%s th epoch, training ...' % epoch
             batch_iterator = BatchIterator(batch_size=batch_size, shuffle=True)
             for x_train_batch, y_train_batch in batch_iterator(x_train, y_train):
-                _, summary = list(sess.run([optimizer, summary_op], feed_dict={
-                    x_feed_dict_key: x_train_batch,
-                    y_feed_dict_key: y_train_batch,
-                    is_training_key: True
-                }))
+                _, summary = sess.run([optimizer, summary_op], feed_dict={
+                    x_placeholder: x_train_batch,
+                    y_placeholder: y_train_batch,
+                    is_training_placeholder: True
+                })
 
             if epoch % val_epoch == 0:
                 loss_train = loss_calculator.calculate(x_train, y_train)

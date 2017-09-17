@@ -71,6 +71,7 @@ class Net:
         return prediction
 
     def define_net(self, input, training):
+        print 'Defining a net ...'
         conv_layers = self._construct_cnn_layers(input=input, training=training)
         flattened = self._flattern_cnn_layers(layers=conv_layers)
         fc_layers = self._construct_fc_layers(flattened=flattened, training=training)
