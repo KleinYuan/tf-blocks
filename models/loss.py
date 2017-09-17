@@ -11,6 +11,6 @@ class lossCalculator:
         self.mode = mode
 
     def calculate(self, predictions, labels):
+        print 'Calculating loss ...'
         if self.mode.lower() == 'mse':
             return np.mean(np.square(predictions - labels))
-

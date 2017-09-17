@@ -1,5 +1,6 @@
 import tensorflow as tf
 from nolearn.lasagne import BatchIterator
+from services.predictServices import Predictor
 
 
 def train(graph_model, epochs, batch_size, data, optimizer, loss_calculator, logdir, save_path, val_epoch=100, save_epoch=500, unittest=False):
@@ -20,15 +21,25 @@ def train(graph_model, epochs, batch_size, data, optimizer, loss_calculator, log
     x_test = data['test']['x']
     y_test = data['test']['y']
 
+    graph = graph_model.graph
+    x_placeholder, y_placeholder, is_training_placeholder = graph_model.get_placeholders()
     if unittest: return True
 
     print 'Running a session ...'
-    with tf.Session(graph=graph_model.graph) as sess:
+    with tf.Session(graph=graph) as sess:
         sess.run(tf.global_variables_initializer())
         saver = tf.train.Saver()
         summary_op = tf.summary.merge_all()
         writer = tf.summary.FileWriter(logdir=logdir, graph=sess.graph)
-        x_placeholder, y_placeholder, is_training_placeholder = graph_model.get_placeholders()
+
+        predictor = Predictor(
+            sess=sess,
+            predict_graph=graph_model.predictions,
+            feed_dict={
+                    'x': x_placeholder,
+                    'training': is_training_placeholder
+                    },
+            batch_size=batch_size)
 
         for epoch in range(epochs):
             print '%s th epoch, training ...' % epoch
@@ -41,8 +52,11 @@ def train(graph_model, epochs, batch_size, data, optimizer, loss_calculator, log
                 })
 
             if epoch % val_epoch == 0:
-                loss_train = loss_calculator.calculate(x_train, y_train)
-                loss_val = loss_calculator.calculate(x_val, y_val)
+                predict_train = predictor.predict_in_batch(x_train)
+                predict_val = predictor.predict_in_batch(x_val)
+
+                loss_train = loss_calculator.calculate(predict_train, y_train)
+                loss_val = loss_calculator.calculate(predict_val, y_val)
                 print '%s th epoch:\n'\
                     '   train loss: %s' \
                     '   val loss: %s'\
@@ -54,7 +68,8 @@ def train(graph_model, epochs, batch_size, data, optimizer, loss_calculator, log
                 snapshot_path = saver.save(sess=sess, save_path=save_path)
                 print 'Snapshot of %s th epoch is saved to %s' % (epoch, snapshot_path)
 
-                loss_test = loss_calculator.calculate(x_test, y_test)
+                predict_test = predictor.predict_in_batch(x_test)
+                loss_test = loss_calculator.calculate(predict_test, y_test)
                 print '%s th epoch:\n' \
                       '   test loss: %s' \
                       % (epoch, loss_test)
