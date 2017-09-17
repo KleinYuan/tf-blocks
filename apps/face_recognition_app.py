@@ -59,7 +59,6 @@ def run():
     kaggelFaceDataSets.load(mode='train', fn=data_fn_train)
     # kaggelFaceDataSets.load(mode='test', fn=data_fn_train)
 
-
     x_train, x_test, y_train, y_test = train_test_split(kaggelFaceDataSets.x_train, kaggelFaceDataSets.y_train, test_size=0.3)
     x_test, x_val, y_test, y_val = train_test_split(x_test, y_test, test_size=0.5)
     data = {
@@ -92,7 +91,6 @@ def run():
           epochs=epochs,
           batch_size=batch_size,
           data=data,
-          optimizer=graph_model.optimizer,
           loss_calculator=loss_calculator,
           logdir='%s/train' % data_fp,
           save_path='%s/save' % data_fp)

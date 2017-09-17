@@ -3,7 +3,7 @@ from nolearn.lasagne import BatchIterator
 from services.predictServices import Predictor
 
 
-def train(graph_model, epochs, batch_size, data, optimizer, loss_calculator, logdir, save_path, val_epoch=100, save_epoch=500, unittest=False):
+def train(graph_model, epochs, batch_size, data, loss_calculator, logdir, save_path, val_epoch=100, save_epoch=500, unittest=False):
     print 'Start training ...'
 
     assert 'train' and 'val' and 'test' in data, 'train or val or test datasets is missing in data'
@@ -22,6 +22,7 @@ def train(graph_model, epochs, batch_size, data, optimizer, loss_calculator, log
     y_test = data['test']['y']
 
     graph = graph_model.graph
+    optimizer = graph_model.optimizer
     x_placeholder, y_placeholder, is_training_placeholder = graph_model.get_placeholders()
     if unittest: return True
 
@@ -42,9 +43,10 @@ def train(graph_model, epochs, batch_size, data, optimizer, loss_calculator, log
             batch_size=batch_size)
 
         for epoch in range(epochs):
-            print '%s th epoch, training ...' % epoch
+            print '%s / %s th epoch, training ...' % (epoch, epochs)
             batch_iterator = BatchIterator(batch_size=batch_size, shuffle=True)
             for x_train_batch, y_train_batch in batch_iterator(x_train, y_train):
+                print 'Running one batch ...'
                 _, summary = sess.run([optimizer, summary_op], feed_dict={
                     x_placeholder: x_train_batch,
                     y_placeholder: y_train_batch,
@@ -73,4 +75,3 @@ def train(graph_model, epochs, batch_size, data, optimizer, loss_calculator, log
                 print '%s th epoch:\n' \
                       '   test loss: %s' \
                       % (epoch, loss_test)
-

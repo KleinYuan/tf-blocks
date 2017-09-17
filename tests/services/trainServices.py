@@ -23,7 +23,6 @@ class TestTrainService(unittest.TestCase):
 
         }
 
-        self.optimizer = 'mock'
         self.loss_calculator = MockLossCalculator()
 
         self.logdir = 'mock'
@@ -34,7 +33,6 @@ class TestTrainService(unittest.TestCase):
                              epochs=self.epoch,
                              batch_size=self.batch_size,
                              data=self.data,
-                             optimizer=self.optimizer,
                              loss_calculator=self.loss_calculator,
                              logdir=self.logdir,
                              save_path=self.save_path,
