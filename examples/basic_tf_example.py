@@ -9,12 +9,25 @@ with graph.as_default():
     res = tf.add(x_feed, y_feed, name='output_1')
     cst_r = tf.add(res, cst, name='output_2')
 
-with tf.Session(graph=graph) as sess:
+# with tf.Session(graph=graph) as sess:
+#     sess.run(tf.global_variables_initializer())
+#
+#     sess_res, sess_cst_r = sess.run([res, cst_r], feed_dict={
+#         x_feed: data[0],
+#         y_feed: data[1]
+#     })
+#     print sess_res
+#     print sess_cst_r
+with graph.as_default():
+    sess = tf.Session(graph=graph)
     sess.run(tf.global_variables_initializer())
 
     sess_res, sess_cst_r = sess.run([res, cst_r], feed_dict={
         x_feed: data[0],
         y_feed: data[1]
     })
-    print sess_res
-    print sess_cst_r
+    sess.close()
+
+del sess
+print sess_res
+print sess_cst_r
