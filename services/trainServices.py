@@ -3,75 +3,84 @@ from nolearn.lasagne import BatchIterator
 from services.predictServices import Predictor
 
 
-def train(graph_model, epochs, batch_size, data, loss_calculator, logdir, save_path, val_epoch=100, save_epoch=500, unittest=False):
-    print 'Start training ...'
+class Trainer:
 
-    assert 'train' and 'val' and 'test' in data, 'train or val or test datasets is missing in data'
-    assert 'x' and 'y' in data['train'], 'x or y in data["train"] is missing'
-    assert 'x' and 'y' in data['val'], 'x or y in data["val"] is missing'
-    assert 'x' and 'y' in data['test'], 'x or y in data["test"] is missing'
-    assert 'calculate' in dir(loss_calculator)
+    def __init__(self, graph_model, epochs, batch_size, logdir, save_path, val_epoch=100, save_epoch=500):
+        self.graph_model = graph_model
+        self.epochs = epochs
+        self.val_epoch = val_epoch
+        self.save_epoch = save_epoch
+        self.batch_size = batch_size
+        self.logdir = logdir
+        self.save_path = save_path
+        self.session = None
 
-    print 'Asserting check passed!'
+    def train(self, data, loss_calculator):
+        print 'Start training ...'
 
-    x_train = data['train']['x']
-    y_train = data['train']['y']
-    x_val = data['val']['x']
-    y_val = data['val']['y']
-    x_test = data['test']['x']
-    y_test = data['test']['y']
+        x_train = data['train']['x']
+        y_train = data['train']['y']
+        x_val = data['val']['x']
+        y_val = data['val']['y']
+        x_test = data['test']['x']
+        y_test = data['test']['y']
 
-    graph = graph_model.graph
-    optimizer = graph_model.optimizer
-    x_placeholder, y_placeholder, is_training_placeholder = graph_model.get_placeholders()
-    if unittest: return True
+        graph, init_graph = self.graph_model.get_graph()
+        optimizer = self.graph_model.optimizer
+        x_placeholder, y_placeholder, is_training_placeholder = self.graph_model.get_placeholders()
 
-    print 'Running a session ...'
-    with tf.Session(graph=graph) as sess:
-        sess.run(tf.global_variables_initializer())
-        saver = tf.train.Saver()
-        summary_op = tf.summary.merge_all()
-        writer = tf.summary.FileWriter(logdir=logdir, graph=sess.graph)
+        print 'Running a session ...'
+        tf_config = tf.ConfigProto(device_count={'GPU': 0})
+        tf_config.gpu_options.allow_growth = True
 
-        predictor = Predictor(
-            sess=sess,
-            predict_graph=graph_model.predictions,
-            feed_dict={
-                    'x': x_placeholder,
-                    'training': is_training_placeholder
-                    },
-            batch_size=batch_size)
+        with tf.Session(graph=graph, config=tf_config) as self.session:
 
-        for epoch in range(epochs):
-            print '%s / %s th epoch, training ...' % (epoch, epochs)
-            batch_iterator = BatchIterator(batch_size=batch_size, shuffle=True)
-            for x_train_batch, y_train_batch in batch_iterator(x_train, y_train):
-                print 'Running one batch ...'
-                _, summary = sess.run([optimizer, summary_op], feed_dict={
-                    x_placeholder: x_train_batch,
-                    y_placeholder: y_train_batch,
-                    is_training_placeholder: True
-                })
+            self.session.run(init_graph)
+            saver = tf.train.Saver()
+            summary_op = tf.summary.merge_all()
+            writer = tf.summary.FileWriter(logdir=self.logdir, graph=self.session.graph)
 
-            if epoch % val_epoch == 0:
-                predict_train = predictor.predict_in_batch(x_train)
-                predict_val = predictor.predict_in_batch(x_val)
+            predictor = Predictor(
+                sess=self.session,
+                predict_graph=self.graph_model.predictions,
+                feed_dict={
+                        'x': x_placeholder,
+                        'training': is_training_placeholder
+                        },
+                batch_size=self.batch_size)
 
-                loss_train = loss_calculator.calculate(predict_train, y_train)
-                loss_val = loss_calculator.calculate(predict_val, y_val)
-                print '%s th epoch:\n'\
-                    '   train loss: %s' \
-                    '   val loss: %s'\
-                    % (epoch, loss_train, loss_val)
+            for epoch in range(self.epochs):
+                print '%s / %s th epoch, training ...' % (epoch, self.epochs)
+                batch_iterator = BatchIterator(batch_size=self.batch_size, shuffle=True)
+                for x_train_batch, y_train_batch in batch_iterator(x_train, y_train):
 
-            writer.add_summary(summary, epoch)
+                    _, summary = self.session.run([optimizer, summary_op], feed_dict={
+                        x_placeholder: x_train_batch,
+                        y_placeholder: y_train_batch,
+                        is_training_placeholder: True
+                    })
 
-            if (epoch % save_epoch == 0) or (epoch == epochs - 1):
-                snapshot_path = saver.save(sess=sess, save_path=save_path)
-                print 'Snapshot of %s th epoch is saved to %s' % (epoch, snapshot_path)
+                if epoch % self.val_epoch == 0:
+                    print '[Validating Round]'
+                    predict_train = predictor.predict_in_batch(x_train)
+                    predict_val = predictor.predict_in_batch(x_val)
 
-                predict_test = predictor.predict_in_batch(x_test)
-                loss_test = loss_calculator.calculate(predict_test, y_test)
-                print '%s th epoch:\n' \
-                      '   test loss: %s' \
-                      % (epoch, loss_test)
+                    loss_train = loss_calculator.calculate(predict_train, y_train)
+                    loss_val = loss_calculator.calculate(predict_val, y_val)
+                    print '%s th epoch:\n'\
+                        '   train loss: %s' \
+                        '   val loss: %s'\
+                        % (epoch, loss_train, loss_val)
+
+                writer.add_summary(summary, epoch)
+
+                if (epoch % self.save_epoch == 0) or (epoch == self.epochs - 1):
+                    print '[Testing Round]'
+                    snapshot_path = saver.save(sess=self.session, save_path=self.save_path)
+                    print 'Snapshot of %s th epoch is saved to %s' % (epoch, snapshot_path)
+
+                    predict_test = predictor.predict_in_batch(x_test)
+                    loss_test = loss_calculator.calculate(predict_test, y_test)
+                    print '%s th epoch:\n' \
+                          '   test loss: %s' \
+                          % (epoch, loss_test)
