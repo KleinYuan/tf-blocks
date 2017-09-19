@@ -19,7 +19,9 @@ NUM_CHANNELS = 3
 NUM_FEATURES = 2
 EPOCHS = 1001
 BATCH_SIZE = 36
+LEARNING_RATE = 0.001
 LOSS_MODE = 'mse'
+MODEL_NAME = 'cnn_ep%s_bts%s_lr%s' % (EPOCHS, BATCH_SIZE, LEARNING_RATE)
 
 # In here, the training.csv should be organized in a way that col: img_id, feature1, feature2, ....
 
@@ -97,14 +99,30 @@ def run():
         }
     }
 
+    cnn_config = {
+        'conv_kernel_config': {
+            'size': 3,
+            'depth_init': 32
+        },
+        'pool_size':2,
+        'dropout_config':{
+            'keep_prob_init': 0.9,
+            'decay': 0.1
+        },
+        'fc_relu_config': {
+            'size': 1000
+        }
+    }
     net = Net(dropout=True,
               num_output=NUM_FEATURES,
               num_conv=3,
-              num_fc=2)
+              num_fc=2,
+              cnn_config=cnn_config)
 
     graph_model = Graph(input_shape=[IMG_SIZE, IMG_SIZE, NUM_CHANNELS],
                         output_shape=[NUM_FEATURES],
-                        net=net)
+                        net=net,
+                        learning_rate=LEARNING_RATE)
 
     loss_calculator = lossCalculator(mode=LOSS_MODE)
 
@@ -112,7 +130,7 @@ def run():
                       epochs=EPOCHS,
                       batch_size=BATCH_SIZE,
                       logdir='%s/train' % DATA_FP,
-                      save_path='%s/save' % DATA_FP)
+                      save_path='%s/save/%s' % (DATA_FP, MODEL_NAME))
     trainer.train(data=data,
                   loss_calculator=loss_calculator)
 
