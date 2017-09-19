@@ -19,7 +19,7 @@ epochs = 1001
 batch_size = 36
 loss_mode = 'mse'
 
-data_fp = '../data/kaggleFace'
+data_fp = '../data/kaggle_face'
 data_fn_train = '%s/training.csv' % data_fp
 data_fn_test = '%s/test.csv' % data_fp
 

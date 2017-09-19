@@ -16,15 +16,28 @@
 - [X] graph: you may find a better description [here](https://www.tensorflow.org/programmers_guide/graphs)
 however in this repo, in summary, you can view graph is everything computation ready however without worrying abou the specific details of networks
 
+# How to setup and run?
 
+### Setup
 
+Basically, just run:
 
+```
 
+# Strongly recommend that you use an anaconda env, with python 2.7
+pip install tensorflow
+pip install -r requirements.txt
+echo "Ta da !"
 
+```
 
+Then, go ahead and download datasets from https://www.kaggle.com/c/facial-keypoints-detection
 
-:fire: :fire: :fire::fire: :fire: :fire:
+And, organize them under data/kaggle_face
 
-Still in progress ...
+### Run
 
-:fire: :fire: :fire: :fire: :fire: :fire:
+```
+# Navigate to apps/
+python face_recognigtion_app.py
+```
