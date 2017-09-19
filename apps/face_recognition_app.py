@@ -7,8 +7,8 @@ from models.data import DataSets
 from models.cnn import Net
 from models.graph import Graph
 from models.loss import lossCalculator
-from services.trainServices import Trainer
-from services.infoServices import get_env_info
+from services.train_services import Trainer
+from services.info_services import get_env_info
 
 get_env_info()
 
@@ -76,7 +76,7 @@ def run():
 
     net = Net(dropout=True,
               num_output=num_keypoints,
-              num_conv=4,
+              num_conv=3,
               num_fc=2)
 
     graph_model = Graph(input_shape=[image_size, image_size, num_channels],

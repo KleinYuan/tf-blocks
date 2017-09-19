@@ -1,6 +1,6 @@
 import tensorflow as tf
 from nolearn.lasagne import BatchIterator
-from services.predictServices import Predictor
+from services.predict_services import Predictor
 
 
 class Trainer:
