@@ -29,6 +29,9 @@ pip install tensorflow
 pip install -r requirements.txt
 echo "Ta da !"
 
+# Run generic_app.py needs this and if you don't wanna be bothered by opencv, just delete that app.
+conda install -c https://conda.anaconda.org/menpo opencv3
+
 ```
 
 Then, go ahead and download datasets from https://www.kaggle.com/c/facial-keypoints-detection

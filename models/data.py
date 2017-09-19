@@ -4,7 +4,8 @@ from copy import deepcopy
 class DataSets:
 
     # In here, we wanna support multiple ways of organizing datasets, like raws images, hd5, tfrecords, ...
-    # We only provide a model here and eventually, you wanna override most functions in this model with your own loader ...
+    # We only provide a model here and eventually,
+    # you wanna override most functions in this model with your own loader ...
 
     def __init__(self, fp):
         print 'Initializing a dataset ...'
