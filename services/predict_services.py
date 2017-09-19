@@ -1,4 +1,5 @@
 from nolearn.lasagne import BatchIterator
+import tensorflow as tf
 
 
 class Predictor:

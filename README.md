@@ -44,3 +44,16 @@ And, organize them under data/kaggle_face
 # Navigate to apps/
 python face_recognigtion_app.py
 ```
+
+
+### Generic Pipeline
+
+For generic training pipeline, you can config whatever in `generic_training_app.py`.
+
+Then simply run it:
+
+```
+# Navigate to apps/
+python generic_training_app.py
+
+```

@@ -1,5 +1,5 @@
 import tensorflow as tf
-
+from config import config
 
 class Graph:
 
@@ -31,9 +31,9 @@ class Graph:
         print 'Defining graph ...'
         self.graph = tf.Graph()
         with self.graph.as_default():
-            self.x_feed = tf.placeholder(tf.float32, shape=self.input_placeholder_shape, name='input_data')
-            self.y_feed = tf.placeholder(tf.float32, shape=self.output_placeholder_shape, name='output')
-            self.is_training = tf.placeholder(tf.bool, name='input_bool')
+            self.x_feed = tf.placeholder(tf.float32, shape=self.input_placeholder_shape, name=config.NODE_NAMES['inputs']['data'])
+            self.y_feed = tf.placeholder(tf.float32, shape=self.output_placeholder_shape, name=config.NODE_NAMES['output'])
+            self.is_training = tf.placeholder(tf.bool, name=config.NODE_NAMES['inputs']['bool'])
 
             self.predictions = self.net.define_net(self.x_feed, self.is_training)
             self.loss = tf.reduce_mean(tf.square(self.predictions - self.y_feed))
