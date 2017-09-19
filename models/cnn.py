@@ -42,10 +42,11 @@ class Net:
         for i in range(0, self.num_conv):
             conv_input = conv_layers[-1]
             dropout_param = self.dropout_config['keep_prob_init'] - float(i) * self.dropout_config['decay']
-
+            kernel_size = self.conv_kernel_config['size']
+            depth = self.conv_kernel_config['depth_init']*(1+i)
             with tf.variable_scope('conv%s' % (i + 1)):
                 print '\n[%s th] CNN layer input shape is : %s' % (i + 1, conv_input.get_shape())
-                conv = blocks.conv_relu(conv_input, kernel_size=self.conv_kernel_config['size'], depth=self.conv_kernel_config['depth_init']*i)
+                conv = blocks.conv_relu(conv_input, kernel_size=kernel_size, depth=depth)
                 pool = blocks.pool(conv, size=self.pool_size)
                 pool = tf.cond(training, lambda: tf.nn.dropout(pool, keep_prob=dropout_param if self.dropout else 1.0), lambda: pool)
                 conv_layers.append(pool)

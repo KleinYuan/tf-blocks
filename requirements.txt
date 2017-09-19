@@ -1,4 +1,5 @@
-Lasagne
+Lasagne=0.2.dev1
 pandas
 sklearn
 nolearn
+theano=0.8.1
