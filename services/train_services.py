@@ -30,7 +30,7 @@ class Trainer:
         x_placeholder, y_placeholder, is_training_placeholder = self.graph_model.get_placeholders()
 
         print 'Running a session ...'
-        tf_config = tf.ConfigProto(device_count={'GPU': 0})
+        tf_config = tf.ConfigProto(device_count={'GPU': 1})
         tf_config.gpu_options.allow_growth = True
 
         with tf.Session(graph=graph, config=tf_config) as self.session:

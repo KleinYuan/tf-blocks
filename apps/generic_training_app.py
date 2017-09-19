@@ -23,7 +23,7 @@ LOSS_MODE = 'mse'
 
 # In here, the training.csv should be organized in a way that col: img_id, feature1, feature2, ....
 
-DATA_FP = '../data/generic_data'
+DATA_FP = './data/generic_data'
 DATA_FN_TRAIN = '%s/train.csv' % DATA_FP
 DATA_FN_TEST = '%s/test.csv' % DATA_FP
 
