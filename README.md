@@ -29,7 +29,7 @@ pip install tensorflow
 pip install -r requirements.txt
 echo "Ta da !"
 
-# Run generic_app.py needs this and if you don't wanna be bothered by opencv, just delete that app.
+# Run generic_training_app needs this and if you don't wanna be bothered by opencv, just delete that app.
 conda install -c https://conda.anaconda.org/menpo opencv3
 
 ```
