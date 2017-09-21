@@ -42,7 +42,7 @@ And, organize them under data/kaggle_face
 
 ```
 # Navigate to root
-python face_recognigtion_app.py
+python apps/face_recognigtion_app.py
 ```
 
 
@@ -54,7 +54,7 @@ Then simply run it:
 
 ```
 # Navigate to root
-python generic_training_app.py
+python apps/generic_training_app.py
 
 ```
 
