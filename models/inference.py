@@ -11,6 +11,7 @@ class Net:
         self.input_data_tensor = None
         self.input_bool_tensor = None
         self.output_tensor = None
+        self.prediction = None
 
         self.in_progress = False
         self.session = None
@@ -39,7 +40,7 @@ class Net:
 
     def predict(self, img):
         self.in_progress = True
-
+        self.prediction = None
         with self.graph.as_default():
             print '[INFO] Read the image ..'
 
@@ -56,9 +57,12 @@ class Net:
                     self.input_data_tensor: x_data,
                     self.input_bool_tensor: False
                 })
-            print prediction
-
+            print '[Info] Prediction is : ', prediction
+            self.prediction = prediction[0]
         self.in_progress = False
+
+    def get_prediction(self):
+        return self.prediction
 
     def get_status(self):
         return self.in_progress
@@ -66,3 +70,4 @@ class Net:
     def kill_predictor(self):
         self.session.close()
         self.session = None
+        self.prediction = None
