@@ -38,7 +38,9 @@ Then, go ahead and download datasets from https://www.kaggle.com/c/facial-keypoi
 
 And, organize them under data/kaggle_face
 
-### Run
+### Training
+
+#### 1.Run a demo for face detection
 
 ```
 # Navigate to root
@@ -47,7 +49,7 @@ python apps/face_recognigtion_app.py
 ```
 
 
-### Generic Pipeline
+#### 2. Run Generic Pipeline
 
 For generic training pipeline, you can config whatever in `generic_training_app.py`.
 
@@ -58,4 +60,16 @@ Then simply run it:
 export PYTHONPATH='.'
 python apps/generic_training_app.py
 
+```
+
+### Freeze Model
+
+```
+python tools/graph_freezer.py --model_folder=${MODEL_FOLDER} --net_name=${NET_NAME}
+```
+
+### Inference
+
+```
+python apps/inference_app.py
 ```

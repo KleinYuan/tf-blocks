@@ -13,7 +13,7 @@ EPOCHS = 1001
 BATCH_SIZE = 36
 LEARNING_RATE = 0.001
 LOSS_MODE = 'mse'
-MODEL_NAME = 'cnn_ep%s_bts%s_lr%s' % (EPOCHS, BATCH_SIZE, 1/LEARNING_RATE)
+MODEL_NAME = 'cnn_ep%s_bts%s_lr%s' % (EPOCHS, BATCH_SIZE, int(1/LEARNING_RATE))
 
 # In here, the training.csv should be organized in a way that col: img_id, feature1, feature2, ....
 
