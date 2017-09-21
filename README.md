@@ -65,6 +65,7 @@ python apps/generic_training_app.py
 ### Freeze Model
 
 ```
+# Make sure ${MODEL_FOLDER} is a absolute path without something like ~
 python tools/graph_freezer.py --model_folder=${MODEL_FOLDER} --net_name=${NET_NAME}
 ```
 

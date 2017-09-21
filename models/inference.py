@@ -35,7 +35,7 @@ class Net:
             self.session = tf.Session(config=tf_config, graph=self.graph)
             self.input_data_tensor = self.graph.get_tensor_by_name('%s:0' % config.NODE_NAMES['inputs']['data'])
             self.input_bool_tensor = self.graph.get_tensor_by_name('%s:0' % config.NODE_NAMES['inputs']['bool'])
-            self.output_tensor = self.graph.get_tensor_by_name('%s:0' % config.NODE_NAMES['output'])
+            self.output_tensor = self.graph.get_tensor_by_name('out/add:0')
 
     def predict(self, img):
         self.in_progress = True
@@ -50,7 +50,7 @@ class Net:
             x_data = x_data.reshape(-1, config.IMG_SIZE, config.IMG_SIZE, config.NUM_CHANNELS)
 
             print '[INFO] Detecting objects ...'
-            prediction = self.session.run(
+            [prediction] = self.session.run(
                 [self.output_tensor],
                 feed_dict={
                     self.input_data_tensor: x_data,
