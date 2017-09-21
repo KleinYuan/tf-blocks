@@ -42,6 +42,7 @@ And, organize them under data/kaggle_face
 
 ```
 # Navigate to root
+export PYTHONPATH='.'
 python apps/face_recognigtion_app.py
 ```
 
@@ -54,14 +55,7 @@ Then simply run it:
 
 ```
 # Navigate to root
+export PYTHONPATH='.'
 python apps/generic_training_app.py
 
-```
-
-### Note
-
-If you run within ubuntu and it says `cannot import module`, run:
-
-```
-export PYTHONPATH='.'
 ```
