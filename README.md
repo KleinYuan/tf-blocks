@@ -57,3 +57,11 @@ Then simply run it:
 python generic_training_app.py
 
 ```
+
+### Note
+
+If you run within ubuntu and it says `cannot import module`, run:
+
+```
+export PYTHONPATH='.'
+```
