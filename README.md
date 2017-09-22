@@ -71,6 +71,4 @@ python tools/graph_freezer.py --model_folder=${MODEL_FOLDER} --net_name=${NET_NA
 
 ### Inference
 
-```
-python apps/inference_app.py
-```
+Look at `apps/inference_app.py` and you pbbly wanna spend some (like one) min to check how you wanna use this class to build an app.

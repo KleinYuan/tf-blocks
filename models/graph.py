@@ -1,6 +1,7 @@
 import tensorflow as tf
 from config import config
 
+
 class Graph:
 
     def __init__(self, input_shape, output_shape, net, learning_rate=0.001, momentum=0.9):
