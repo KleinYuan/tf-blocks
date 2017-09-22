@@ -21,7 +21,6 @@ loss_mode = 'mse'
 
 data_fp = './data/kaggle_face'
 data_fn_train = '%s/training.csv' % data_fp
-data_fn_test = '%s/test.csv' % data_fp
 
 
 class FaceDataSets(DataSets):

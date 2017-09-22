@@ -5,7 +5,7 @@ from services.predict_services import Predictor
 
 class Trainer:
 
-    def __init__(self, graph_model, epochs, batch_size, logdir, save_path, val_epoch=100, save_epoch=500):
+    def __init__(self, graph_model, epochs, batch_size, logdir, save_path, val_epoch=100, save_epoch=200):
         self.graph_model = graph_model
         self.epochs = epochs
         self.val_epoch = val_epoch
@@ -76,7 +76,7 @@ class Trainer:
 
                 if (epoch % self.save_epoch == 0) or (epoch == self.epochs - 1):
                     print '[Testing Round]'
-                    snapshot_path = saver.save(sess=self.session, save_path=self.save_path)
+                    snapshot_path = saver.save(sess=self.session, save_path="%s_%s_" % (self.save_path, epoch))
                     print 'Snapshot of %s th epoch is saved to %s' % (epoch, snapshot_path)
 
                     predict_test = predictor.predict_in_batch(x_test)
@@ -84,3 +84,5 @@ class Trainer:
                     print '%s th epoch:\n' \
                           '   test loss: %s' \
                           % (epoch, loss_test)
+            save_path = saver.save(self.session, self.save_path)
+            print 'Training ended and model file is in here: ', save_path
