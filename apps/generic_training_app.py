@@ -30,7 +30,7 @@ class GenericDataSets(DataSets):
         print 'Loading imgs, resize and normalize it! '
         print img_ids
         for img_id in img_ids:
-            img = cv2.imread('%s/%s.%s' % (config.IMG_ROOT_DIR, img_id, config.IMG_FORMAT))
+            img = cv2.imread('%s/%s' % (config.IMG_ROOT_DIR, img_id))
             if img is None:
                 print 'Found None img: %s' % img_id
                 raise

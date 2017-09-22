@@ -20,7 +20,5 @@ MODEL_NAME = 'cnn_ep%s_bts%s_lr%s' % (EPOCHS, BATCH_SIZE, int(1/LEARNING_RATE))
 DATA_FP = './data/generic_data'
 DATA_FN_TRAIN = '%s/train.csv' % DATA_FP
 DATA_FN_TEST = '%s/test.csv' % DATA_FP
-
-IMG_FORMAT = 'jpg'
 IMG_ROOT_DIR = '%s/imgs' % DATA_FP
 IMG_ID_NAME = 'image_id'
