@@ -6,7 +6,6 @@ from pandas.io.parsers import read_csv
 from models.data import DataSets
 from models.cnn import Net
 from models.graph import Graph
-from models.loss import lossCalculator
 from services.train_services import Trainer
 from services.info_services import get_env_info
 
@@ -17,8 +16,8 @@ num_channels = 1
 num_keypoints = 30
 epochs = 1001
 batch_size = 36
-loss_mode = 'mse'
 
+# You may wanna change this fp according to your own env
 data_fp = './data/kaggle_face'
 data_fn_train = '%s/training.csv' % data_fp
 
@@ -82,15 +81,12 @@ def run():
                         output_shape=[num_keypoints],
                         net=net)
 
-    loss_calculator = lossCalculator(mode=loss_mode)
-
     trainer = Trainer(graph_model=graph_model,
                       epochs=epochs,
                       batch_size=batch_size,
                       logdir='%s/train' % data_fp,
                       save_path='%s/save' % data_fp)
-    trainer.train(data=data,
-                  loss_calculator=loss_calculator)
+    trainer.train(data=data)
 
 
 if __name__ == "__main__":

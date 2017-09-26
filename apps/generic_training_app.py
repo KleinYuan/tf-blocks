@@ -7,7 +7,6 @@ from pandas.io.parsers import read_csv
 from models.data import DataSets
 from models.cnn import Net
 from models.graph import Graph
-from models.loss import lossCalculator
 from services.train_services import Trainer
 from services.info_services import get_env_info
 from config import config
@@ -104,15 +103,12 @@ def run():
                         net=net,
                         learning_rate=config.LEARNING_RATE)
 
-    loss_calculator = lossCalculator(mode=config.LOSS_MODE)
-
     trainer = Trainer(graph_model=graph_model,
                       epochs=config.EPOCHS,
                       batch_size=config.BATCH_SIZE,
                       logdir='%s/train' % config.DATA_FP,
                       save_path='%s/save/%s' % (config.DATA_FP, config.MODEL_NAME))
-    trainer.train(data=data,
-                  loss_calculator=loss_calculator)
+    trainer.train(data=data)
 
 
 if __name__ == "__main__":

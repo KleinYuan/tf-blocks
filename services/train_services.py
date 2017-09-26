@@ -1,10 +1,8 @@
 import tensorflow as tf
 from nolearn.lasagne import BatchIterator
-from services.predict_services import Predictor
 
 
 class Trainer:
-
     def __init__(self, graph_model, epochs, batch_size, logdir, save_path, val_epoch=100, save_epoch=200):
         self.graph_model = graph_model
         self.epochs = epochs
@@ -15,7 +13,15 @@ class Trainer:
         self.save_path = save_path
         self.session = None
 
-    def train(self, data, loss_calculator):
+    def eval(self, x, y, tf_x, tf_y, tf_train, tf_loss):
+        loss = self.session.run([tf_loss], feed_dict={
+            tf_x: x,
+            tf_y: y,
+            tf_train: False
+        })
+        return loss
+
+    def train(self, data):
         print 'Start training ...'
 
         x_train = data['train']['x']
@@ -40,20 +46,10 @@ class Trainer:
             summary_op = tf.summary.merge_all()
             writer = tf.summary.FileWriter(logdir=self.logdir, graph=self.session.graph)
 
-            predictor = Predictor(
-                sess=self.session,
-                predict_graph=self.graph_model.predictions,
-                feed_dict={
-                        'x': x_placeholder,
-                        'training': is_training_placeholder
-                        },
-                batch_size=self.batch_size)
-
             for epoch in range(self.epochs):
                 print '%s / %s th epoch, training ...' % (epoch, self.epochs)
                 batch_iterator = BatchIterator(batch_size=self.batch_size, shuffle=True)
                 for x_train_batch, y_train_batch in batch_iterator(x_train, y_train):
-
                     _, summary = self.session.run([optimizer, summary_op], feed_dict={
                         x_placeholder: x_train_batch,
                         y_placeholder: y_train_batch,
@@ -62,15 +58,24 @@ class Trainer:
 
                 if epoch % self.val_epoch == 0:
                     print '[Validating Round]'
-                    predict_train = predictor.predict_in_batch(x_train)
-                    predict_val = predictor.predict_in_batch(x_val)
 
-                    loss_train = loss_calculator.calculate(predict_train, y_train)
-                    loss_val = loss_calculator.calculate(predict_val, y_val)
-                    print '%s th epoch:\n'\
-                        '   train loss: %s' \
-                        '   val loss: %s'\
-                        % (epoch, loss_train, loss_val)
+                    loss_train = self.eval(x=x_train,
+                                           y=y_train,
+                                           tf_x=x_placeholder,
+                                           tf_y=y_placeholder,
+                                           tf_train=is_training_placeholder,
+                                           tf_loss=self.graph_model.loss)
+                    loss_val = self.eval(x=x_val,
+                                         y=y_val,
+                                         tf_x=x_placeholder,
+                                         tf_y=y_placeholder,
+                                         tf_train=is_training_placeholder,
+                                         tf_loss=self.graph_model.loss)
+
+                    print '%s th epoch:\n' \
+                          '   train loss: %s' \
+                          '   val loss: %s' \
+                          % (epoch, loss_train, loss_val)
 
                 writer.add_summary(summary, epoch)
 
@@ -79,8 +84,12 @@ class Trainer:
                     snapshot_path = saver.save(sess=self.session, save_path="%s_%s_" % (self.save_path, epoch))
                     print 'Snapshot of %s th epoch is saved to %s' % (epoch, snapshot_path)
 
-                    predict_test = predictor.predict_in_batch(x_test)
-                    loss_test = loss_calculator.calculate(predict_test, y_test)
+                    loss_test = self.eval(x=x_test,
+                                          y=y_test,
+                                          tf_x=x_placeholder,
+                                          tf_y=y_placeholder,
+                                          tf_train=is_training_placeholder,
+                                          tf_loss=self.graph_model.loss)
                     print '%s th epoch:\n' \
                           '   test loss: %s' \
                           % (epoch, loss_test)
