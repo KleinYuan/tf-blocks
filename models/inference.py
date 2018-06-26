@@ -5,6 +5,7 @@ from config import config
 
 
 class Net:
+
     def __init__(self, graph_fp):
         self.graph_fp = graph_fp
         self.graph = None

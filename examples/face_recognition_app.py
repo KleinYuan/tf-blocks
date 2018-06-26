@@ -1,7 +1,7 @@
 import os
 import numpy as np
 from sklearn.utils import shuffle
-from sklearn.cross_validation import train_test_split
+from sklearn.model_selection import train_test_split
 from pandas.io.parsers import read_csv
 from models.data import DataSets
 from models.cnn import Net

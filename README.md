@@ -1,4 +1,4 @@
-# CNN Training Pipeline
+# Building Blocks of Tensorflow DNN 
 
 - [X] Highly modularized and configurable that you can configure each step
 
@@ -40,16 +40,16 @@ And, organize them under data/kaggle_face
 
 ### Training
 
-#### 1.Run a demo for face detection
+#### 1.Run a demo for face detection example
 
 ```
 # Navigate to root
 export PYTHONPATH='.'
-python apps/face_recognigtion_app.py
+python examples/face_recognigtion_app.py
 ```
 
 
-#### 2. Run Generic Pipeline
+#### 2. Run generic pipeline example
 
 For generic training pipeline, you can config whatever in `generic_training_app.py`.
 
@@ -58,7 +58,7 @@ Then simply run it:
 ```
 # Navigate to root
 export PYTHONPATH='.'
-python apps/generic_training_app.py
+python examples/generic_training_app.py
 
 ```
 
