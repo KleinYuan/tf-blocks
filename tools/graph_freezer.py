@@ -1,7 +1,7 @@
 import os, argparse
 import tensorflow as tf
 from tensorflow.python.framework import graph_util
-from config import config
+from config import template_config as config
 
 dir = os.path.dirname(os.path.realpath(__file__))
 
@@ -17,7 +17,7 @@ def freeze_graph(model_folder, net_name):
     # Before exporting our graph, we need to precise what is our output node
     # This is how TF decides what part of the Graph he has to keep and what part it can dump
     # NOTE: this variable is plural, because you can have multiple output nodes
-    output_node_names = "%s,%s,%s,out/add" \
+    output_node_names = "%s,%s,%s" \
                         % (config.NODE_NAMES['inputs']['data'],
                            config.NODE_NAMES['inputs']['bool'],
                            config.NODE_NAMES['output'])
