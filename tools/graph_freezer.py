@@ -1,7 +1,7 @@
 import os, argparse
 import tensorflow as tf
 from tensorflow.python.framework import graph_util
-from config import template_config as config
+from config import base_config as config
 
 dir = os.path.dirname(os.path.realpath(__file__))
 

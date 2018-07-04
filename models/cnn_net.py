@@ -78,6 +78,3 @@ class Net(BaseNet):
         self.y_pl = tf.placeholder(tf.float32, shape=predictions.shape, name=self.node_names['output'])
 
         return predictions
-
-    def get_placeholders(self):
-        return self.x_pl, self.y_pl, self.is_training_pl

@@ -1,10 +1,17 @@
 import tensorflow as tf
-from core.base_data_generator import BaseDataGenerator
+from core.base_net import BaseNet
 from core.base_graph import BaseGraph
 from core.base_trainer import BaseTrainer
-from core.base_net import BaseNet
+from core.base_data_generator import BaseDataGenerator
+from config import base_config as config
 
-from config import template_config as config
+
+class MyDataGenerator(BaseDataGenerator):
+    def load_data(self):
+        """
+        Put your data loading code here!
+        """
+        return
 
 
 def main():
@@ -16,7 +23,7 @@ def main():
     tf.logging.set_verbosity(tf.logging.INFO)
     logger = tf.logging
     # Initialize Four Modules: Data, Trainer, Net, Graph
-    data_generator = BaseDataGenerator()
+    data_generator = MyDataGenerator()
     net = BaseNet(config=config, logger=logger)
     graph_model = BaseGraph(net=net, config=config, logger=logger)
     trainer = BaseTrainer(graph_model=graph_model, config=config, logger=logger)
