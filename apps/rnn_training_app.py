@@ -3,18 +3,18 @@ import numpy as np
 from core.base_data_generator import BaseDataGenerator
 from core.base_graph import BaseGraph
 from core.base_trainer import BaseTrainer
-from models.cnn_net import Net
-from config import cnn_config as config
+from models.rnn_net import Net
+from config import rnn_config as config
 from sklearn.model_selection import train_test_split
 
 
-class CNNDataGenerator(BaseDataGenerator):
+class RNNDataGenerator(BaseDataGenerator):
 	def load_data(self, *args, **kwargs):
 		(x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
 
-		x_train = np.expand_dims(x_train, axis=3)
+		x_train = np.expand_dims(x_train, axis=0)[0]
 		y_train = np.expand_dims(y_train, axis=1)
-		x_test = np.expand_dims(x_test, axis=3)
+		x_test = np.expand_dims(x_test, axis=0)[0]
 		y_test = np.expand_dims(y_test, axis=1)
 
 		# print("x shape: {}".format(x_train.shape))
@@ -33,7 +33,7 @@ def main():
 	tf.logging.set_verbosity(tf.logging.INFO)
 	logger = tf.logging
 	# Initialize Four Modules: Data, Trainer, Net, Graph
-	data_generator = CNNDataGenerator()
+	data_generator = RNNDataGenerator()
 	net = Net(config=config, logger=logger)
 	graph_model = BaseGraph(net=net, config=config, logger=logger)
 	trainer = BaseTrainer(graph_model=graph_model, config=config, logger=logger)
