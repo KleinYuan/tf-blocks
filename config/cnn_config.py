@@ -35,8 +35,8 @@ VAL_EPOCH = 100
 SAVE_EPOCH = 200
 BATCH_SIZE = 36
 
-LOG_DIR = './log/'
-SAVE_DIR = './save/'
+LOG_DIR = './cnn_log/'
+SAVE_DIR = './cnn_save/'
 MODEL_NAME = 'cnn'
 INPUT_SHAPE = [None, IMG_SIZE, IMG_SIZE, NUM_CHANNELS]
 LOSS_TYPE = 'mse'  # ['mse', 'cross_entropy']

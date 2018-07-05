@@ -1,3 +1,10 @@
+# Announcement
+
+To further increase the scope of this repo, the original `KleinYuan/cnn` repo has been deprecated and
+saved in this [branch](https://github.com/KleinYuan/tf-blocks/tree/master-deprecated).
+
+The scope of this branch has been extended to `tf-blocks` since Jul., 2018.
+
 # 1. TF-Blocks
 
 The scope of this repo is to provide a modularized architecture of tensorflow project so that
@@ -146,9 +153,17 @@ Notes:
 python apps/${fancy_name}_training_app.py
 ```
 
-5. Todos
+# 5. Examples
 
-- [ ] Adding RNN example
+**Architecture**             |  **Graph**
+:-------------------------:|:-------------------------:
+CNN| ![CNN](https://user-images.githubusercontent.com/8921629/42332548-1c64c040-802d-11e8-8ab3-14ea4758099c.png)
+RNN | ![RNN](https://user-images.githubusercontent.com/8921629/42332535-145d11d6-802d-11e8-880b-891cabbd63a5.png)
+GAN | TBA
+
+# 6. Todo Items
+
+- [X] Adding RNN example
 
 - [ ] Adding GAN example
 

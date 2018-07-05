@@ -13,8 +13,8 @@ VAL_EPOCH = 100
 SAVE_EPOCH = 200
 BATCH_SIZE = 36
 
-LOG_DIR = './log/'
-SAVE_DIR = './save/'
+LOG_DIR = './rnn_log/'
+SAVE_DIR = './rnn_save/'
 MODEL_NAME = 'template'
 INPUT_SHAPE = [None, INPUT_SIZE, INPUT_SIZE]
 LOSS_TYPE = 'mse'  # ['mse', 'cross_entropy']
